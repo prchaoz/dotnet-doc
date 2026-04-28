@@ -1,9 +1,9 @@
-using DotnetDoc.AssemblyResolution;
+using DotnetDescribe.AssemblyResolution;
 using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 
-namespace DotnetDoc.CompilationFactory;
+namespace DotnetDescribe.CompilationFactory;
 
 public class ProjectCompilationSource : ICompilationSource
 {

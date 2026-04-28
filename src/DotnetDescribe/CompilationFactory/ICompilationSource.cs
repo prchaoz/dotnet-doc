@@ -1,7 +1,7 @@
-using DotnetDoc.AssemblyResolution;
+using DotnetDescribe.AssemblyResolution;
 using Microsoft.CodeAnalysis;
 
-namespace DotnetDoc.CompilationFactory;
+namespace DotnetDescribe.CompilationFactory;
 
 public record CompilationResult(
     Compilation Compilation,

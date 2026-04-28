@@ -1,4 +1,4 @@
-namespace DotnetDoc.TypeResolution;
+namespace DotnetDescribe.TypeResolution;
 
 public static class TypeQueryParser
 {

@@ -1,4 +1,4 @@
-namespace DotnetDoc.AssemblyResolution;
+namespace DotnetDescribe.AssemblyResolution;
 
 public enum SourceKind
 {

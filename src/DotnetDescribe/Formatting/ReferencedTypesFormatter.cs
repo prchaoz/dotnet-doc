@@ -1,9 +1,9 @@
 using System.Text;
-using DotnetDoc.AssemblyResolution;
-using DotnetDoc.CompilationFactory;
+using DotnetDescribe.AssemblyResolution;
+using DotnetDescribe.CompilationFactory;
 using Microsoft.CodeAnalysis;
 
-namespace DotnetDoc.Formatting;
+namespace DotnetDescribe.Formatting;
 
 public static class ReferencedTypesFormatter
 {

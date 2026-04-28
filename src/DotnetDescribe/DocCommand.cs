@@ -1,8 +1,8 @@
-using DotnetDoc.CompilationFactory;
-using DotnetDoc.Formatting;
-using DotnetDoc.TypeResolution;
+using DotnetDescribe.CompilationFactory;
+using DotnetDescribe.Formatting;
+using DotnetDescribe.TypeResolution;
 
-namespace DotnetDoc;
+namespace DotnetDescribe;
 
 public record DocOptions(
     string? Runtime,

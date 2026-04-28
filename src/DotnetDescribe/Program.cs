@@ -1,5 +1,5 @@
 using System.CommandLine;
-using DotnetDoc;
+using DotnetDescribe;
 
 var typeOrMemberArg = new Argument<string>("type-or-member")
 {

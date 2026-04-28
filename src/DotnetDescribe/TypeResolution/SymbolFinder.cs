@@ -1,6 +1,6 @@
 using Microsoft.CodeAnalysis;
 
-namespace DotnetDoc.TypeResolution;
+namespace DotnetDescribe.TypeResolution;
 
 public record FoundSymbol(INamedTypeSymbol Type, ISymbol? Member);
 

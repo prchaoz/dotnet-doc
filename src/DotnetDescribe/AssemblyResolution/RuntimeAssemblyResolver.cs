@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace DotnetDoc.AssemblyResolution;
+namespace DotnetDescribe.AssemblyResolution;
 
 public static class RuntimeAssemblyResolver
 {

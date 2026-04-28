@@ -1,8 +1,8 @@
-using DotnetDoc.AssemblyResolution;
+using DotnetDescribe.AssemblyResolution;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace DotnetDoc.CompilationFactory;
+namespace DotnetDescribe.CompilationFactory;
 
 public class RuntimeCompilationSource : ICompilationSource
 {

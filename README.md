@@ -1,4 +1,4 @@
-# dotnet-doc
+# dotnet-describe
 
 A `go doc` analog for .NET. Displays type documentation, member signatures, and XML doc comments from the command line.
 
@@ -7,8 +7,8 @@ Built for AI agents that need to implement interfaces or override classes withou
 ## Installation
 
 ```bash
-dotnet pack src/DotnetDoc/DotnetDoc.csproj
-dotnet tool install -g --add-source src/DotnetDoc/bin/Release/net10.0/ dotnet-doc
+dotnet pack src/DotnetDescribe/DotnetDescribe.csproj
+dotnet tool install -g --add-source src/DotnetDescribe/bin/Release/net10.0/ dotnet-describe
 ```
 
 ## Usage
@@ -18,10 +18,10 @@ Exactly one source mode is required: `--runtime`, `--package`, or `--project`.
 ### Inspect runtime/framework types
 
 ```bash
-dotnet-doc --runtime netcore/10.0 IDisposable
-dotnet-doc --runtime aspnet/10.0 IApplicationBuilder
-dotnet-doc --runtime netcore/10.0 System.IO.Stream
-dotnet-doc --runtime netcore/10.0 Stream.Read
+dotnet-describe --runtime netcore/10.0 IDisposable
+dotnet-describe --runtime aspnet/10.0 IApplicationBuilder
+dotnet-describe --runtime netcore/10.0 System.IO.Stream
+dotnet-describe --runtime netcore/10.0 Stream.Read
 ```
 
 Short aliases: `netcore`, `aspnet`, `desktop`.
@@ -29,8 +29,8 @@ Short aliases: `netcore`, `aspnet`, `desktop`.
 ### Inspect NuGet packages
 
 ```bash
-dotnet-doc --package Microsoft.Extensions.Logging.Abstractions/9.0.0 ILogger
-dotnet-doc --package Newtonsoft.Json/13.0.3 JsonConvert
+dotnet-describe --package Microsoft.Extensions.Logging.Abstractions/9.0.0 ILogger
+dotnet-describe --package Newtonsoft.Json/13.0.3 JsonConvert
 ```
 
 Packages are resolved from the NuGet global cache (`~/.nuget/packages/`).
@@ -38,8 +38,8 @@ Packages are resolved from the NuGet global cache (`~/.nuget/packages/`).
 ### Inspect project source code
 
 ```bash
-dotnet-doc --project ./src/MyApp MyApp.Services.UserService
-dotnet-doc --project ./src/MyApp IUserService
+dotnet-describe --project ./src/MyApp MyApp.Services.UserService
+dotnet-describe --project ./src/MyApp IUserService
 ```
 
 Uses Roslyn to analyze source code directly. Works even if the project doesn't compile. Shows source file location in output.
@@ -58,7 +58,7 @@ Uses Roslyn to analyze source code directly. Works even if the project doesn't c
 ### Interface
 
 ```
-$ dotnet-doc --runtime netcore/10.0 IDisposable
+$ dotnet-describe --runtime netcore/10.0 IDisposable
 
 namespace System
 
@@ -71,7 +71,7 @@ public interface IDisposable
 ### Abstract class with referenced types
 
 ```
-$ dotnet-doc --runtime netcore/10.0 System.IO.Stream
+$ dotnet-describe --runtime netcore/10.0 System.IO.Stream
 
 namespace System.IO
 
@@ -104,7 +104,7 @@ Referenced types:
 ### Member detail
 
 ```
-$ dotnet-doc --runtime netcore/10.0 Stream.Read
+$ dotnet-describe --runtime netcore/10.0 Stream.Read
 
 namespace System.IO, class Stream
 
@@ -124,7 +124,7 @@ public abstract int Read(byte[] buffer, int offset, int count)
 ### NuGet package
 
 ```
-$ dotnet-doc --package Microsoft.Extensions.Logging.Abstractions/9.0.0 ILogger
+$ dotnet-describe --package Microsoft.Extensions.Logging.Abstractions/9.0.0 ILogger
 
 namespace Microsoft.Extensions.Logging
 
@@ -162,7 +162,7 @@ Referenced types:
 To drill into a referenced type, use the label as the source flag:
 
 ```bash
-dotnet-doc --package Microsoft.Extensions.Logging.Abstractions/9.0.0 Microsoft.Extensions.Logging.LogLevel
+dotnet-describe --package Microsoft.Extensions.Logging.Abstractions/9.0.0 Microsoft.Extensions.Logging.LogLevel
 ```
 
 ## Architecture

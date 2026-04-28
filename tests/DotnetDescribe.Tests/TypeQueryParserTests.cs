@@ -1,6 +1,6 @@
-using DotnetDoc.TypeResolution;
+using DotnetDescribe.TypeResolution;
 
-namespace DotnetDoc.Tests;
+namespace DotnetDescribe.Tests;
 
 public class TypeQueryParserTests
 {

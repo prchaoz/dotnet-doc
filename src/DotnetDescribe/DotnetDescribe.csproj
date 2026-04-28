@@ -6,8 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackAsTool>true</PackAsTool>
-    <ToolCommandName>dotnet-doc</ToolCommandName>
-    <PackageId>dotnet-doc</PackageId>
+    <ToolCommandName>dotnet-describe</ToolCommandName>
+    <PackageId>dotnet-describe</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

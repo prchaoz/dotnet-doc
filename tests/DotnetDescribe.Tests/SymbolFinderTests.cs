@@ -1,9 +1,9 @@
-using DotnetDoc.CompilationFactory;
-using DotnetDoc.TypeResolution;
+using DotnetDescribe.CompilationFactory;
+using DotnetDescribe.TypeResolution;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace DotnetDoc.Tests;
+namespace DotnetDescribe.Tests;
 
 public class SymbolFinderTests
 {
