@@ -143,7 +143,7 @@ public class SymbolOutputFormatter
             {
                 sb.AppendLine("    Parameters:");
                 foreach (var (name, desc) in doc.Parameters)
-                    sb.AppendLine($"        {name}  - {desc}");
+                    sb.AppendLine($"        {name} - {desc}");
                 sb.AppendLine();
             }
 
@@ -307,14 +307,14 @@ public class SymbolOutputFormatter
             var root = doc.Root;
             if (root == null) return new DocComment(null, [], null, null);
 
-            var summary = CleanText(root.Element("summary")?.Value);
-            var returns = CleanText(root.Element("returns")?.Value);
-            var remarks = CleanText(root.Element("remarks")?.Value);
+            var summary = RenderElement(root.Element("summary"));
+            var returns = RenderElement(root.Element("returns"));
+            var remarks = RenderElement(root.Element("remarks"));
 
             var parameters = root.Elements("param")
                 .Select(p => (
                     Name: p.Attribute("name")?.Value ?? "",
-                    Desc: CleanText(p.Value) ?? ""))
+                    Desc: RenderElement(p) ?? ""))
                 .Where(p => !string.IsNullOrEmpty(p.Name))
                 .ToList();
 
@@ -326,10 +326,63 @@ public class SymbolOutputFormatter
         }
     }
 
-    private static string? CleanText(string? text)
+    private static string? RenderElement(XElement? element)
     {
-        if (text == null) return null;
-        var cleaned = string.Join(" ", text.Split(['\r', '\n', '\t', ' '], StringSplitOptions.RemoveEmptyEntries));
-        return string.IsNullOrWhiteSpace(cleaned) ? null : cleaned;
+        if (element == null) return null;
+
+        var sb = new StringBuilder();
+        foreach (var node in element.Nodes())
+        {
+            switch (node)
+            {
+                case XText text:
+                    sb.Append(text.Value);
+                    break;
+                case XElement el:
+                    sb.Append(RenderInlineElement(el));
+                    break;
+            }
+        }
+
+        // Collapse whitespace
+        var result = string.Join(" ", sb.ToString().Split(['\r', '\n', '\t', ' '], StringSplitOptions.RemoveEmptyEntries));
+        return string.IsNullOrWhiteSpace(result) ? null : result;
+    }
+
+    private static string RenderInlineElement(XElement el)
+    {
+        return el.Name.LocalName switch
+        {
+            "see" => RenderCref(el.Attribute("cref")?.Value)
+                  ?? el.Attribute("langword")?.Value
+                  ?? RenderElement(el)
+                  ?? "",
+            "seealso" => RenderCref(el.Attribute("cref")?.Value) ?? "",
+            "paramref" => el.Attribute("name")?.Value ?? "",
+            "typeparamref" => el.Attribute("name")?.Value ?? "",
+            "c" => el.Value,
+            "code" => el.Value,
+            "para" => RenderElement(el) ?? "",
+            _ => RenderElement(el) ?? "",
+        };
+    }
+
+    private static string? RenderCref(string? cref)
+    {
+        if (cref == null) return null;
+
+        // Strip the prefix (T:, M:, P:, F:, E:, N:, !:)
+        var value = cref.Length > 2 && cref[1] == ':' ? cref[2..] : cref;
+
+        // Extract just the short name for readability
+        // "System.IO.Stream.Read(System.Byte[],System.Int32,System.Int32)" → "Stream.Read"
+        var parenIdx = value.IndexOf('(');
+        var namepart = parenIdx >= 0 ? value[..parenIdx] : value;
+
+        // Take last two segments (Type.Member or just Type)
+        var segments = namepart.Split('.');
+        return segments.Length <= 2
+            ? namepart
+            : string.Join(".", segments[^2..]);
     }
 }
