@@ -154,6 +154,14 @@ public class SymbolOutputFormatter
                 sb.AppendLine();
             }
 
+            if (doc.Exceptions.Count > 0)
+            {
+                sb.AppendLine("    Exceptions:");
+                foreach (var (type, desc) in doc.Exceptions)
+                    sb.AppendLine($"        {type} - {desc}");
+                sb.AppendLine();
+            }
+
             if (doc.Remarks != null)
             {
                 sb.AppendLine($"    Remarks:");
@@ -297,7 +305,7 @@ public class SymbolOutputFormatter
         };
     }
 
-    private record DocComment(string? Summary, List<(string Name, string Desc)> Parameters, string? Returns, string? Remarks);
+    private record DocComment(string? Summary, List<(string Name, string Desc)> Parameters, string? Returns, string? Remarks, List<(string Type, string Desc)> Exceptions);
 
     private static DocComment ParseDocComment(string xml)
     {
@@ -305,7 +313,7 @@ public class SymbolOutputFormatter
         {
             var doc = XDocument.Parse(xml);
             var root = doc.Root;
-            if (root == null) return new DocComment(null, [], null, null);
+            if (root == null) return new DocComment(null, [], null, null, []);
 
             var summary = RenderElement(root.Element("summary"));
             var returns = RenderElement(root.Element("returns"));
@@ -318,11 +326,18 @@ public class SymbolOutputFormatter
                 .Where(p => !string.IsNullOrEmpty(p.Name))
                 .ToList();
 
-            return new DocComment(summary, parameters, returns, remarks);
+            var exceptions = root.Elements("exception")
+                .Select(e => (
+                    Type: RenderCref(e.Attribute("cref")?.Value) ?? "",
+                    Desc: RenderElement(e) ?? ""))
+                .Where(e => !string.IsNullOrEmpty(e.Type))
+                .ToList();
+
+            return new DocComment(summary, parameters, returns, remarks, exceptions);
         }
         catch
         {
-            return new DocComment(null, [], null, null);
+            return new DocComment(null, [], null, null, []);
         }
     }
 
@@ -370,19 +385,6 @@ public class SymbolOutputFormatter
     private static string? RenderCref(string? cref)
     {
         if (cref == null) return null;
-
-        // Strip the prefix (T:, M:, P:, F:, E:, N:, !:)
-        var value = cref.Length > 2 && cref[1] == ':' ? cref[2..] : cref;
-
-        // Extract just the short name for readability
-        // "System.IO.Stream.Read(System.Byte[],System.Int32,System.Int32)" → "Stream.Read"
-        var parenIdx = value.IndexOf('(');
-        var namepart = parenIdx >= 0 ? value[..parenIdx] : value;
-
-        // Take last two segments (Type.Member or just Type)
-        var segments = namepart.Split('.');
-        return segments.Length <= 2
-            ? namepart
-            : string.Join(".", segments[^2..]);
+        return cref.Length > 2 && cref[1] == ':' ? cref[2..] : cref;
     }
 }
